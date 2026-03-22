@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.main-container {
+    background-color: white;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    max-width: 1000px;
+    width: 100%;
+    padding: 25px;
+}
+
+.main-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+    position: relative;
+}
+.main-container h1::after {
+    content: "";
+    height: 3px;
+    width: 100%;
+    border-radius: 12px;
+    background: linear-gradient(to right, red, blue);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.generate-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+.sample-color-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    padding: 5px 10px;
+    flex: 1 0 0;
+}
+.palette-type-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 10px;
+    flex: 1 0 0;
+}
+.generate-button-box {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    padding: 5px 10px;
+    flex: 1 0 0;
+}
+
+.sample-color-box p {
+    font-size: 1.1rem;
+}
+#colorCode {
+    height: 30px;
+    width: 30px;
+    margin: 5px 15px;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid #666;
+    border-radius: 5px;
+}
+
+#paletteType {
+    height: 40px;
+    max-width: 210px;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 3px;
+    border-radius: 6px;
+    border: none;
+    background-color: #F1F1F1;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+
+    cursor: pointer;
+}
+#paletteType:focus {
+    outline: none;
+}
+
+#generateBtn {
+    height: 40px;
+    max-width: 210px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    padding: 3px;
+    background-color: #F1F1F1;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+#generateBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+}
+#generateBtn:active {
+    transform: translateY(0px);
+}
+
+.color-palettes {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.color-box {
+    display: flex;
+    flex-direction: column;
+    height: 240px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+.color-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.3);
+}
+
+.color {
+    flex-grow: 1;
+    background-color: rgb(13, 205, 253);
+}
+
+.color-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    font-weight: 500;
+}
+
+#pickerContainer {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.4);
+    top: 10px;
+    left: 50%;
+    padding: 20px;
+    border-radius: 1rem;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+}
+#pickerContainer button {
+    background-color: #F1F1F1;
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px 0px;
+    font-size: 1rem;
+    border-radius: 0.8rem;
+    border: none;
+}
+#pickerContainer button:hover {
+    background-color: hsl(0, 0%, 90%);
+}
+#pickerContainer button:active {
+    background-color: hsl(0, 0%, 85%);
+}
+

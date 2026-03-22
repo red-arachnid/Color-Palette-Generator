@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Color Palette Generator</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1>Color Palette Generator</h1>
+
+        <div class="generate-options">
+            <div class="sample-color-box">
+                <p>Selected Color: </p> 
+                <div id="colorCode">
+                    <div id="pickerContainer">
+                        <div id="colorPicker"></div>
+                        <button>Random Color</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palette-type-box">
+                <select name="paletteType" id="paletteType">
+                    <option value="0">Monochromatic</option>
+                    <option value="1">Analogous</option>
+                    <option value="2">Complementary</option>
+                    <option value="3">Split-Complementary</option>
+                    <option value="4">Triadic</option>
+                </select>
+            </div>
+
+            <div class="generate-button-box">
+                <button id="generateBtn">Generate Palette</button>
+            </div>
+        </div>
+
+        <div class="color-palettes">
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+
+            <div class="color-box">
+                <div class="color"></div>
+                <div class="color-info">
+                    <p class="hex-code">#FFFFFF</p>
+                    <i class="fa-regular fa-copy" title="Click To Copy"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
