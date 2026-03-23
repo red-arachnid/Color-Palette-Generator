@@ -18,10 +18,17 @@ const colorPaletteDiv = document.querySelector(".color-palettes");
 
 let colorPickerTimeId;
 let baseColor = new HSL(generateRandomHue(), 100, 50);
+let paletteCount = 6;
+
+const paletteGenerators = {
+  0: () => generateMonochromaticPalette(baseColor, paletteCount),
+  1: () => generateAnalogousPalette(baseColor, paletteCount),
+  2: () => generateComplementaryPalette(baseColor, paletteCount),
+  3: () => generateSplitComplementaryPalette(baseColor, paletteCount),
+  4: () => generateTriadPalette(baseColor, paletteCount)
+};
 
 
-
-// ---Configuring the color picker---
 
 const colorPicker = new iro.ColorPicker("#colorPicker", {
   width: 200,
@@ -38,33 +45,21 @@ colorPicker.on('color:change', function(color) {
 });
 
 
-
-// ---Event Listners---
-
 generateBtn.addEventListener("click", () => {
-  const paletteType = Number(paletteTypeDropdown.value);
+  const paletteType = paletteTypeDropdown.value;
 
-  const paletteGenerators = [
-    generateMonochromaticPalette(baseColor, 6),
-    generateAnalogousPalette(baseColor),
-    generateComplementaryPalette(baseColor),
-    generateSplitComplementaryPalette(baseColor),
-    generateTriadPalette(baseColor)
-  ];
+  const generatePalette = paletteGenerators[paletteType];
 
-  if (isNaN(paletteType)){
-    alert("Something went wrong!");
+  if (!generatePalette){
+    alert("Something went wrong");
     return;
   }
 
-  const colorPalette = paletteGenerators[paletteType];
-  console.log(colorPalette);
-  Array.from(colorPaletteDiv.children).forEach((element, index) => {
-    const hsl = colorPalette[index];
-    element.querySelector(".color").style.backgroundColor = `hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%)`;
-    element.querySelector(".hex-code").textContent = hslToHex(hsl.hue, hsl.saturation, hsl.lightness);
-  });
+  const colorPalette = generatePalette();
+
+  renderPalettes(colorPalette);
 });
+
 
 selectColorDiv.addEventListener("click", () => {
   colorPickerDiv.style.display = "block";
@@ -97,39 +92,49 @@ randomColorBtn.addEventListener("click", (event) => {
   colorPickerDiv.style.display = "none";
 });
 
-Array.from(colorPaletteDiv.children).forEach((element) => {
-  element.addEventListener("click", () => {
-    const icon = element.querySelector("i");
-    const hexCode = element.querySelector(".hex-code").textContent;
-    
-    navigator.clipboard.writeText(hexCode)
-    .then(() => {
-      icon.classList.remove("fa-regular", "fa-copy");
-      icon.classList.add("fa-solid", "fa-check");
-      icon.style.color = "#3bc757";
 
-      setTimeout(() => {
-        icon.classList.add("fa-regular", "fa-copy");
-        icon.classList.remove("fa-solid", "fa-check");
-        icon.style.color = "#000";
-      }, 1000);
-    })
-    .catch (e)(
-      alert("Failed to copy...")
-    );
-  });
-});
-
-
-
-// Basic Initialization
 generateRandomBackgroundColor();
 selectColorDiv.style.backgroundColor = `hsl(${baseColor.hue}, 100%, 50%)`;
 generateBtn.click();
 
 
+/// FUNCTIONS
 
-//! ---Functions after this point---
+function renderPalettes(colorPalette){
+  colorPaletteDiv.innerHTML = "";
+
+  colorPalette.forEach(color => {
+    const hexCode = hslToHex(color.hue, color.saturation, color.lightness);
+    const colorBox = document.createElement("div");
+    colorBox.classList.add("color-box");
+    colorBox.innerHTML = `
+      <div class="color" style="background-color: ${hexCode}"></div>
+      <div class="color-info">
+          <p class="hex-code">${hexCode.toUpperCase()}</p>
+          <i class="fa-regular fa-copy" title="Click To Copy"></i>
+      </div>
+    `;
+
+    colorBox.addEventListener("click", () => copyToClipboard(hexCode, colorBox.querySelector("i")));
+    colorPaletteDiv.appendChild(colorBox);
+  });
+}
+
+function copyToClipboard(hexCode, icon) {
+  navigator.clipboard.writeText(hexCode)
+  .then(() => {
+    icon.classList.remove("fa-regular", "fa-copy");
+    icon.classList.add("fa-solid", "fa-check");
+    icon.style.color = "#3bc757";
+
+    setTimeout(() => {
+      icon.classList.add("fa-regular", "fa-copy");
+      icon.classList.remove("fa-solid", "fa-check");
+      icon.style.color = "#000";
+    }, 1000);
+  })
+  .catch(error => alert("Failed to copy..."));
+}
 
 function generateRandomBackgroundColor(){
   const hue = generateRandomHue();
@@ -143,17 +148,16 @@ function generateRandomHue() {
 function generateMonochromaticPalette(sampleColor, count){
   const colorPalette = [];
   const hue = sampleColor.hue;
-  for (let i = 0; i < count-1; i++){
+  for (let i = 0; i < count; i++){
     const saturation = Math.floor(Math.random() * 100);
     const lightness = Math.floor(Math.random() * 100);
     const color = new HSL(hue, saturation, lightness);
     colorPalette.push(color);
   }
-  colorPalette.push(sampleColor);
   return colorPalette;
 }
 
-function generateAnalogousPalette(sampleColor){
+function generateAnalogousPalette(sampleColor, count){
   const colorPalette = [];
   const saturation = sampleColor.saturation;
   const lightness = sampleColor.lightness;
@@ -161,40 +165,61 @@ function generateAnalogousPalette(sampleColor){
   const randomizer = Math.round(Math.random() * 5) + 10;
 
   let hue = sampleColor.hue - (randomizer * 2);
-  colorPalette.push(new HSL(hue, saturation, lightness));
-  for (let i = 0; i < 5; i++){
-    hue += randomizer;
+  for (let i = 0; i < count; i++){
     colorPalette.push(new HSL(hue, saturation, lightness));
+    hue += randomizer;
   }
   return colorPalette;
 }
 
-function generateComplementaryPalette(sampleColor){
-  const complementColor = new HSL(sampleColor.hue + 180, sampleColor.saturation, sampleColor.lightness);
-  const colorPalette = [...generateMonochromaticPalette(sampleColor, 3), ...generateAnalogousPalette(complementColor, 3)];
+function generateComplementaryPalette(sampleColor, count){
+  let compliementaryCount = Math.round(count / 2);
+  count -= compliementaryCount;
+
+  const complementAngle = Math.round(Math.random() * 20) + 170;
+
+  const complementColor = new HSL(sampleColor.hue + complementAngle, sampleColor.saturation, sampleColor.lightness);
+  const colorPalette = [...generateMonochromaticPalette(sampleColor, count), ...generateAnalogousPalette(complementColor, compliementaryCount)];
   return colorPalette;
 }
 
-function generateSplitComplementaryPalette(sampleColor){
-  const complementColor1 = new HSL(sampleColor.hue + 195, sampleColor.saturation, sampleColor.lightness);
-  const complementColor2 = new HSL(sampleColor.hue + 165, sampleColor.saturation, sampleColor.lightness);
+function generateSplitComplementaryPalette(sampleColor, count){
+  const counts = divideIntoThree(count);
+
+  const complementAngle = Math.round(Math.random() * 20) + 170;
+
+  const complementColor1 = new HSL(sampleColor.hue + complementAngle + 15, sampleColor.saturation, sampleColor.lightness);
+  const complementColor2 = new HSL(sampleColor.hue + complementAngle - 15, sampleColor.saturation, sampleColor.lightness);
   const colorPalette = [
-    ...generateMonochromaticPalette(sampleColor, 2),
-    ...generateMonochromaticPalette(complementColor1, 2),
-    ...generateMonochromaticPalette(complementColor2, 2)
+    ...generateMonochromaticPalette(sampleColor, counts[0]),
+    ...generateMonochromaticPalette(complementColor1, counts[1]),
+    ...generateMonochromaticPalette(complementColor2, counts[2])
   ];
   return colorPalette;
 }
 
-function generateTriadPalette(sampleColor){
+function generateTriadPalette(sampleColor, count){
+  const counts = divideIntoThree(count);
+
   const complementColor1 = new HSL(sampleColor.hue + 120, sampleColor.saturation, sampleColor.lightness);
   const complementColor2 = new HSL(sampleColor.hue - 120, sampleColor.saturation, sampleColor.lightness);
   const colorPalette = [
-    ...generateMonochromaticPalette(sampleColor, 2),
-    ...generateMonochromaticPalette(complementColor1, 2),
-    ...generateMonochromaticPalette(complementColor2, 2)
+    ...generateMonochromaticPalette(sampleColor, counts[0]),
+    ...generateMonochromaticPalette(complementColor1, counts[1]),
+    ...generateMonochromaticPalette(complementColor2, counts[2])
   ];
   return colorPalette;
+}
+
+function divideIntoThree(num){
+  const base = Math.floor(num / 3);
+  const remainder = num % 3;
+
+  return [
+    base + (remainder > 0 ? 1 : 0),
+    base + (remainder > 1 ? 1 : 0),
+    base
+  ];
 }
 
 //Color Mathsss
