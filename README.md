@@ -1,6 +1,6 @@
 # Color-Palette-Generator
-
 [![Live Demo](https://img.shields.io/badge/demo-live-blueviolet)](https://red-arachnid.github.io/Color-Palette-Generator/)
+
 The Color Palette Generator is a clean, interactive web application that helps designers and developers instantly create beautiful, mathematically accurate color schemes. By selecting a single base color, users can instantly generate harmonious palettes based on classic color theory algorithms, including:
 - Monochromatic
 - Analogous
